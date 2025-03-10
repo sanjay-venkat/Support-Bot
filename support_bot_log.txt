@@ -1,0 +1,17 @@
+2025-03-10 21:14:54,027 - INFO - Use pytorch device_name: cpu
+2025-03-10 21:14:54,027 - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-03-10 21:14:59,097 - INFO - Successfully loaded document: sample.pdf
+2025-03-10 21:14:59,162 - INFO - Split document into 5 sections.
+2025-03-10 21:15:04,875 - INFO - FAISS index created successfully.
+2025-03-10 21:15:04,875 - INFO - Loaded document: sample.pdf
+2025-03-10 21:15:11,051 - INFO - Processing query: What is the purpose of this document?
+2025-03-10 21:18:50,296 - INFO - Processing query: Who is the intended audience for this document?   
+2025-03-10 21:19:21,639 - INFO - Processing query: What are some of the information security risks mentioned in the document?
+2025-03-10 21:20:10,151 - INFO - Processing query: Why is information security important to BSU?
+2025-03-10 21:20:39,754 - INFO - Processing query: What are "standard of due care controls"?
+2025-03-10 21:21:40,899 - INFO - Processing query: What BSU policies and rules define the minimum controls necessary to prevent legal problems?
+2025-03-10 21:22:41,398 - INFO - Processing query: How can a single unauthorized exception to information security measures affect the university?
+2025-03-10 21:23:13,674 - INFO - Processing query: What is the capital of France?
+2025-03-10 21:24:07,264 - INFO - Processing query: What are some good recipes for chocolate chip cookies?
+2025-03-10 21:25:36,385 - INFO - Processing query: If a train leaves Chicago at 8:00 AM traveling at 60 mph, and another train leaves New York at 9:00 AM traveling at 75 mph, will they ever meet?
+2025-03-10 21:42:14,942 - INFO - Processing query: How often should Information Owners review classifications?   exit
