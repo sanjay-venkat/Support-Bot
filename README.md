@@ -18,13 +18,19 @@ This project implements a support bot that can answer questions based on the con
     ```
 
 3.  **Download models:**
-
-    Run the `setup.bat` file to download the necessary models.
+    **WINDOWS**
+    Run the `setup.bat` file to download the necessary models .
 
     ```bash
     setup.bat
     ```
-
+    **LINUX**
+    Run the `setup.sh` file to download the necessary models .
+    ```bash
+    chmod +x setup.sh
+    ./setup.sh
+    ```
+    
     This will download the following models:
 
     * FLAN-T5 Large model
