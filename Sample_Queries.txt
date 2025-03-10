@@ -1,0 +1,61 @@
+What is the purpose of this document?    
+
+Who is the intended audience for this document?    
+
+What are some of the information security risks mentioned in the document?    
+
+Why is information security important to BSU?    
+
+What are "standard of due care controls"?    
+
+What BSU policies and rules define the minimum controls necessary to prevent legal problems?    
+
+How can a single unauthorized exception to information security measures affect the university?    
+
+What role do employees play in information security at BSU?    
+
+What is the function of the Information Security Committee?    
+
+Who are Information Owners and what are their responsibilities?    
+
+What decisions and activities are Information Stewards responsible for?    
+
+Who are Data Custodians and what are their primary functions?    
+
+What are the two types of information Users?    
+
+What are the responsibilities of the Enterprise IT Security Department?    
+
+What should a user do if they suspect a security problem?    
+
+What documents and frameworks are the standards in this document rooted in?    
+
+Are employees expected to complete information security awareness training?    
+
+What should an employee's manager do when the employee leaves BSU?    
+
+Can user IDs be reassigned to other employees?    
+
+What is BSU’s stance on preventing security issues versus correcting them?    
+
+What should Information Owners consult when selecting a sensitivity classification category for their information?    
+
+Who designates the members of the Information Security Committee?    
+
+Where are information and information systems distributed?    
+
+What are some examples of security measures system designers at BSU are required to include?    
+
+How often should Information Owners review classifications?    
+
+Out-of-Context Questions:
+
+What is the capital of France?
+
+Explain the theory of relativity in simple terms.
+
+What are some good recipes for chocolate chip cookies?
+
+If a train leaves Chicago at 8:00 AM traveling at 60 mph, and another train leaves New York at 9:00 AM traveling at 75 mph, will they ever meet?
+
+Who won the Super Bowl in 2023?
