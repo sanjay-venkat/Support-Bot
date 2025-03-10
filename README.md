@@ -7,8 +7,8 @@ This project implements a support bot that can answer questions based on the con
 1.  **Clone the repository:**
 
     ```bash
-    git clone <repository_url>
-    cd <repository_directory>
+    git clone https://github.com/sanjay-venkat/Support-Bot
+    cd Support-Bot
     ```
 
 2.  **Install dependencies:**
