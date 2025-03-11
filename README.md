@@ -1,14 +1,5 @@
-Here’s an improved README.md with the latest updates based on your current code:
 
-✅ Reflects Streamlit UI changes (feedback system, bottom input box, etc.).
-✅ Clarifies hybrid retrieval & FAISS improvements.
-✅ Specifies automatic model reuse to optimize setup time.
-✅ Improves formatting & readability.
-
-
----
-
-Support-Bot
+##Support-Bot
 
 This project implements a customer support bot that can answer questions based on the content of a given document.
 
