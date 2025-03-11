@@ -1,217 +1,129 @@
 ---
 
-##   Development Decision Documentation
+## Development Decision Documentation
 
-This document details the critical design choices, challenges, and refinements made during the development of the Customer Support Bot, ensuring an autonomous, document-trained agent capable of iterative improvement. The final implementation prioritizes accuracy, adaptability, and robustness while adhering to Python best practices. Additionally, the bot is designed to be efficient for low-computational environments and provides a user-friendly interface using Streamlit.
-
----
-
-##   1. Document Processing & Training
-
-###   Objective
-
-Load and preprocess PDF/TXT documents into structured, retrievable sections.
-
-###   Design Choices
-
-* **PyPDF2 for PDFs:** Extracts raw text efficiently, handling multi-page documents while filtering out empty pages.
-* **Sentence-Based Splitting (nltk.sent_tokenize):** Maintains logical coherence by splitting text at sentence boundaries rather than arbitrary chunks.
-* **Embedding Generation (all-MiniLM-L6-v2):** A fast, lightweight model chosen for efficient sentence embeddings, ensuring low latency retrieval and compatibility with resource-constrained devices.
-
-###   Challenges & Solutions
-
-* **Handling Large Documents**
-
-    * **Dynamic Chunking:** Sentences are aggregated into chunks, ensuring each remains under 512 tokens (T5’s input limit). If a single sentence exceeds the token limit, it is split into smaller chunks.
-    * **Memory Optimization:** Processing occurs in batches to avoid high RAM usage.
-* **Empty Document Handling**
-
-    * **Graceful Exit:** If no readable text is extracted, the bot logs an error and informs the user.
+This document outlines the key design choices, challenges, and refinements made during the development of the Customer Support Bot. The final implementation prioritizes accuracy, adaptability, and robustness while adhering to Python best practices. It also considers performance optimization for resource-constrained environments.
 
 ---
 
-##   2. Query Handling & Response Generation
+## 1. Document Processing & Training
 
-###   Objective
+**Objective:** Efficiently load, preprocess, and convert PDF/TXT documents into structured, retrievable sections.
 
-Accurately answer user queries by retrieving the most relevant document sections and generating context-aware responses.
+### Design Choices
 
-###   Design Choices
+* **PyPDF2 for PDFs:** Extracts raw text from PDFs efficiently, filtering empty pages.
+* **Sentence-Based Splitting:** Uses `nltk.sent_tokenize` to split text into coherent segments, preserving context.
+* **Optimized Token Limit Handling:** Sections are dynamically chunked to fit within a 512-token limit, ensuring compatibility with retrieval models.
+* **SentenceTransformer Embeddings:** `all-MiniLM-L6-v2` was chosen for its balance between accuracy and speed.
 
-* **FAISS for Semantic Search (IndexFlatL2)**
+### Challenges & Solutions
 
-    * Faster and more accurate than keyword search, enabling efficient document retrieval.
-    * Normalized embeddings improve retrieval accuracy by ensuring cosine similarity is correctly measured.
-* **FLAN-T5 (Large)**
-
-    * Strong instruction-following capabilities make it better suited for answering user queries contextually.
-    * Text-to-Text Framework allows better adaptability in generating responses.
-* **Dynamic Response Length**
-
-    * Short Responses for Simple Queries (e.g., "contact support").
-    * Longer Responses for Complex Queries, ensuring that the bot does not over-explain straightforward questions.
-
-###   Challenges & Solutions
-
-* **Relevance Threshold**
-
-    * A 0.8 similarity threshold (determined through experimentation) ensures only highly relevant document sections are used, preventing hallucinations.
-* **Token Limits & Truncation**
-
-    * Input to FLAN-T5 is truncated to 512 tokens for efficiency while ensuring sufficient context is included.
+* **Handling Large Documents:** A dynamic chunking strategy ensures that sections remain coherent while respecting model token limits.
+* **Empty Documents:** Implemented strict validation to prevent processing unreadable or empty files, ensuring early failure detection.
 
 ---
 
-##   3. Feedback Loop & Iterative Refinement
+## 2. Query Handling & Response Generation
 
-###   Objective
+**Objective:** Accurately retrieve and answer user queries using document-trained context.
 
-Improve responses using a structured feedback system.
+### Design Choices
 
-###   Design Choices
+* **Hybrid Retrieval (FAISS + TF-IDF)**
+    * **FAISS (Semantic Search):** Uses L2 similarity search over sentence embeddings.
+    * **TF-IDF (Keyword Matching):** Ensures recall of contextually relevant sections.
+    * **Hybrid Selection:** FAISS is prioritized, with TF-IDF used as a fallback when the cosine similarity is below 0.5.
+* **FLAN-T5 for Answer Generation**
+    * The `google/flan-t5-large` model generates responses with strong contextual understanding.
+    * Queries and contexts are formatted as: `question: <query> context: <retrieved_section>`
+    * **Dynamic Response Length:** Adjusts based on query complexity.
 
-* **Real User Feedback via Streamlit**
+### Challenges & Solutions
 
-    * Users provide thumbs up/down, triggering real-time refinement instead of simulated feedback.
-    * Feedback is stored to a log file for potential future analysis and model improvement.
-* **Feedback-Based Refinement with FLAN-T5**
-
-    * If feedback is "too vague" or "not helpful", the bot generates a refined response by appending additional context.
-
-###   Challenges & Solutions
-
-* **Preventing Over-Refinement**
-
-    * Refinement is limited to 2 iterations to prevent infinite loops or excessive verbosity.
-* **Context Preservation**
-
-    * The prompt format ensures the model retains original query intent:
-
-        * `Refine: [query] Initial Response: [response]`
+* **Hallucinations & Irrelevant Responses:** Implemented a similarity threshold (0.5) for FAISS to filter out less relevant sections.
+* **Token Limits:** The T5 model input is truncated to 512 tokens to prevent overflow errors.
 
 ---
 
-##   4. Logging & Transparency
+## 3. Logging & Transparency
 
-###   Objective
+**Objective:** Provide clear and structured logs for debugging and evaluation.
 
-Ensure clear debugging and evaluation of the bot’s decision-making process.
+### Design Choices
 
-###   Design Choices
-
-* **Comprehensive Logging (logging module)**
-
-    * Logs key steps like document loading, section splits, query processing, and feedback application.
-* **Structured Log Format**
-
-    * Includes timestamp, log level, and message context (e.g., "Loaded document: res.pdf").
-* **Noise Reduction**
-
-    * Suppresses irrelevant warnings (e.g., PyPDF2 extraction errors), keeping logs clean.
+* **Comprehensive Logging:** Key events (document loading, query handling, errors) are logged.
+* **Structured Format:** Logs include timestamps, log levels, and execution details.
+* **Noise Reduction:** Suppressed unnecessary logs (e.g., PyPDF2 warnings).
 
 ---
 
-##   5. Robustness & Edge Case Handling
+## 4. Robustness & Edge Cases
 
-###   Objective
+**Objective:** Ensure the bot handles unexpected inputs gracefully.
 
-Ensure stability and reliability when handling unexpected inputs.
+### Design Choices
 
-###   Design Choices
+* **Fallback Responses:** If no relevant section is found, return "I don’t have enough information to answer that."
+* **Exception Handling:** Uses `try-except` blocks for document processing, embedding creation, and response generation.
+* **Hardware Compatibility:** The model runs on CPU using `float32` precision, avoiding unnecessary GPU dependencies.
 
-* **Fallback Responses for Unanswerable Queries**
+### Challenges & Solutions
 
-    * Returns "I don’t have enough information to answer that." when no relevant section is found.
-* **Error Handling for Critical Failures**
-
-    * Try-except blocks catch and log embedding generation errors, document parsing failures, and model loading issues.
-    * Example: If the document fails to load, the user sees an error message: "Document could not be loaded."
-* **Hardware Compatibility Enhancements**
-
-    * The T5 model runs on CPU with float32 precision, ensuring the bot can run on standard hardware without requiring specialized GPUs, increasing accessibility.
+* **FAISS Index Issues:** Implemented an early exit strategy if embeddings fail.
+* **Unsupported File Formats:** Returns an error message instead of crashing.
 
 ---
 
-##   6. User Interface with Streamlit
+## 5. User Interface with Streamlit
 
-###   Objective
+**Objective:** Provide a clean, interactive web-based UI.
 
-Provide an interactive and user-friendly web-based interface.
+### Design Choices
 
-###   Design Choices
-
-* **Streamlit-Based Interface**
-
-    * **File Upload:** Allows users to upload PDF or TXT documents.
-    * **Query Input:** A simple text box for user queries.
-    * **Response Display:** Bot responses are formatted clearly.
-    * **Feedback Buttons:** Users can provide feedback (Helpful/Not Helpful), triggering real-time refinement.
-    * **Conversation History:** Allows users to review past queries and responses.
-
-###   Challenges & Solutions
-
-* **Ensuring Clear User Guidance**
-
-    * The UI provides step-by-step instructions to guide users on uploading files and querying.
-* **Real-Time Updates**
-
-    * The UI updates in real time as the bot generates responses.
+* **Streamlit for Web UI:**
+    * **File Upload:** Supports PDFs and TXTs.
+    * **Query Input & Response Display:** Provides an interactive chat-like experience.
+    * **Feedback Buttons:** Users can mark responses as "Helpful" or "Not Helpful," triggering refinements.
+    * **Conversation History:** Allows users to view previous interactions.
 
 ---
 
-##   7. Optimization for Low-Computational Devices
+## 6. Performance Optimization for Resource-Constrained Environments
 
-###   Objective
+**Objective:** Ensure efficient execution on resource-limited hardware.
 
-Optimize the bot for fast performance on CPUs and reduce memory footprint.
+### Design Choices
 
-###   Design Choices & Future Enhancements
+* **Optimized CPU Execution:**
+    * `torch.set_num_threads(4)`: Limits CPU thread usage to avoid resource bottlenecks.
+* **FAISS for Fast Retrieval:**
+    * Provides fast similarity search without requiring a GPU.
+* **Efficient Memory Management:**
+    * Lazy model loading prevents unnecessary memory consumption.
 
-* **Model Quantization (Planned)**
+### Future Enhancements
 
-    * Use bitsandbytes for 4-bit quantization, reducing memory footprint without sacrificing accuracy.
-* **Efficient Data Structures**
-
-    * Optimize embeddings storage and document indexing for speed.
-* **Selective Model Loading**
-
-    * Modify setup.bat to reuse downloaded models instead of redownloading on every run.
-* **Asynchronous Processing (Planned)**
-
-    * Implement async operations for faster response times.
+* Quantization with `bitsandbytes` to reduce model size and improve latency.
+* Smaller T5 variants (`flan-t5-small` or `flan-t5-base`) for faster inference.
 
 ---
 
-##   8. Future Enhancements
+## 7. Future Improvements
 
-While the bot meets core assignment requirements, several enhancements are planned:
-
-1.  **Hybrid Retrieval:**
-
-    * Combine FAISS with keyword-based matching to improve recall.
-
-2.  **Multilingual Support:**
-
-    * Use paraphrase-multilingual-MiniLM-L12-v2 to handle queries in different languages.
-
-3.  **Adaptive Learning Mechanism:**
-
-    * Implement continuous learning from user feedback to improve responses over time.
-
-4.  **Performance Profiling & Speed Optimization:**
-
-    * Profile execution times and optimize query retrieval speed further.
+1.  **Real User Feedback:** Replace simulated feedback with Streamlit thumbs up/down for real-time response improvement.
+2.  **Better Hybrid Retrieval:** Experiment with BM25 and dense vector re-ranking for more accurate section retrieval.
+3.  **Multilingual Support:** Enable support for queries in multiple languages using `paraphrase-multilingual-MiniLM-L12-v2`.
+4.  **Continuous Learning:** Implement a feedback-driven retraining loop.
 
 ---
 
-##   9. Conclusion
+## 8. Conclusion
 
-The Customer Support Bot successfully balances accuracy, efficiency, and usability by leveraging:
+The Customer Support Bot is a highly optimized, fast, accurate, and robust system capable of retrieving and answering user queries based on uploaded documents. The hybrid retrieval method, optimized CPU execution, and Streamlit UI integration make it a user-friendly and scalable solution. Future enhancements will focus on real-time learning, multilingual support, and further efficiency optimizations.
 
-* Sentence-based chunking for logical text segmentation.
-* FAISS similarity search for fast and precise document retrieval.
-* FLAN-T5’s generative capabilities for coherent and context-aware responses.
-* Streamlit for an intuitive user interface.
-* Optimizations for CPU execution to ensure wider accessibility.
+---
 
-The modular class structure (DocumentProcessor, QueryHandler, FeedbackManager) enhances maintainability and extensibility, making the bot adaptable for real-world deployment.
+## 🔗 GitHub Repository:
+
+[Support-Bot](https://github.com/sanjay-venkat/Support-Bot)
