@@ -137,7 +137,6 @@ Bot: This document provides guidelines on information security policies.
 ## 📁 Files & Structure
 
 support-bot/
-
 ├── Support_Bot.py  # Main Python script containing the bot's logic
 
 ├── setup.sh      # Bash script to download necessary models (Linux/macOS)
