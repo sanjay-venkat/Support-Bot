@@ -1,103 +1,180 @@
-#   Support-Bot
+Here’s an improved README.md with the latest updates based on your current code:
 
-This project implements a support bot that can answer questions based on the content of a given document.
+✅ Reflects Streamlit UI changes (feedback system, bottom input box, etc.).
+✅ Clarifies hybrid retrieval & FAISS improvements.
+✅ Specifies automatic model reuse to optimize setup time.
+✅ Improves formatting & readability.
 
-##   Description
 
-The Support-Bot is designed to provide users with information extracted from a document. It utilizes natural language processing (NLP) techniques to understand user queries and provide relevant answers. The bot can be run in an interactive terminal mode or through a Streamlit web interface for a more user-friendly experience.
+---
 
-##   Setup
+Support-Bot
 
-1.  **Clone the repository:**
+This project implements a customer support bot that can answer questions based on the content of a given document.
 
-    ```bash
-    git clone [https://github.com/sanjay-venkat/Support-Bot](https://github.com/sanjay-venkat/Support-Bot)
-    cd Support-Bot
-    ```
+📌 Description
 
-2.  **Install dependencies:**
+The Support-Bot is designed to provide users with accurate responses extracted from a document. It leverages Large Language Models (FLAN-T5), embeddings (SentenceTransformers), and FAISS similarity search to process user queries efficiently.
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+The bot can be run in:
 
-3.  **Download models:**
+Interactive Terminal Mode (CLI-based chat).
 
-    **Windows**
+Streamlit Web Interface (with chat history, feedback, and document upload).
 
-    Run the `setup.bat` file to download the necessary models.
 
-    ```bash
-    setup.bat
-    ```
+🛠️ Setup
 
-    **Linux/macOS**
+1️⃣ Clone the repository:
 
-    Run the `setup.sh` file to download the necessary models.
+git clone https://github.com/sanjay-venkat/Support-Bot
+cd Support-Bot
 
-    ```bash
-    chmod +x setup.sh
-    ./setup.sh
-    ```
+2️⃣ Install dependencies:
 
-    This will download the following models:
+pip install -r requirements.txt
 
-    * FLAN-T5 Large model
-    * FLAN-T5 Large tokenizer
-    * SentenceTransformer model (all-MiniLM-L6-v2)
+3️⃣ Download & Setup Models
 
-##   Usage
+The bot requires FLAN-T5, SentenceTransformer, and FAISS models.
 
-1.  **Prepare your document:**
+Windows Users
 
-    Place the document you want the bot to use in the same directory as the script. The document can be a PDF or TXT file.
+Run the setup.bat script to automatically download the models:
 
-    * For the terminal application (`Support_Bot.py`), you can either name your document `sample.pdf` or modify the `document_path` variable in the script to point to your document.
-    * For the Streamlit application (`app.py`), you can upload your document through the interface.
+setup.bat
 
-2.  **Run the bot:**
+Linux/macOS Users
 
-    You can run the bot in two ways:
+Run the setup.sh script:
 
-    **a) Interactive Mode (Terminal):**
+chmod +x setup.sh
+./setup.sh
 
-    ```bash
-    python Support_Bot.py
-    ```
+⚡ Optimized Model Loading
 
-    The bot will start in interactive mode. You can type your questions, and the bot will provide answers based on the content of the loaded document. Type `exit` to quit the bot.
+Setup scripts will reuse existing models instead of downloading them repeatedly.
 
-    **b) Streamlit Interface:**
+This reduces setup time and ensures efficient model management.
 
-    ```bash
-    streamlit run app.py
-    ```
 
-    This will launch a web interface in your browser. You can interact with the bot through the chat interface.
 
-##   Example
+---
 
-**Interactive Mode (Terminal):**
+🚀 Usage
 
-Welcome to the Customer Support Bot! Type 'exit' to quit.
-```bash
+1️⃣ Prepare your Document
+
+Place the PDF or TXT file in the project directory.
+
+For Terminal Mode: Name it sample.pdf or modify document_path in the script.
+
+For Streamlit UI: Upload the document via the web interface.
+
+
+2️⃣ Run the Bot
+
+A) Interactive Mode (Terminal)
+
+python Support_Bot.py
+
+The bot starts in an interactive CLI mode.
+
+Type queries, and it will respond based on the document.
+
+Type exit to quit.
+
+
+B) Web Interface (Streamlit)
+
+streamlit run app.py
+
+Launches a chat-based UI with a typing box at the bottom.
+
+Users can upload documents, send queries, and receive AI-generated responses.
+
+Feedback system included: Users must rate responses before asking the next question.
+
+
+
+---
+
+📝 Example Interactions
+
+Interactive Mode (Terminal)
+
+Welcome to the Support Bot! Type 'exit' to quit.
 You: What is the purpose of this document?
-Bot: This document provides information about information security risks.
-```
+Bot: This document provides guidelines on information security policies.
 
-**Streamlit Interface:**
+Streamlit Web Interface
 
-*(A screenshot of the Streamlit interface would be very helpful here in your README!)*
+📌 Features:
+✅ Bottom-centered chat input
+✅ Chat messages appear above the input box
+✅ Like/Dislike feedback system (only one feedback per bot response)
 
-##   Files
+(A screenshot of the UI would be ideal here!)
 
-* `Support_Bot.py`: The main Python script containing the bot's logic for processing documents, handling queries, and generating responses in the terminal.
-* `app.py`: The Streamlit application script for creating the interactive chat interface in a web browser, allowing users to upload documents and interact with the bot.
-* `setup.bat`: A batch script for Windows to automate the download of necessary models.
-* `setup.sh`: A shell script for Linux/macOS to automate the download of necessary models.
-* `requirements.txt`: A list of Python dependencies required to run the project.
-* `sample.pdf`: A sample PDF document provided for testing the bot's functionality.
-* `support_bot_log.txt`: A log file that records the bot's activity, including document loading, query processing, and errors.
-* `Development Decision Document.md`: This document outlines the key design choices, challenges, and refinements made during the development of the Support-Bot.
-* `README.md`: The main file providing information and instructions about the Support-Bot project.
-* `Sample_Queries.txt`: A text file containing sample queries that can be used to test the bot.
+
+---
+
+🔍 Features & Improvements
+
+1️⃣ Hybrid Retrieval Mechanism
+
+FAISS + Keyword Matching: Enhances recall by combining vector similarity search with keyword-based retrieval.
+
+Ensures highly relevant responses even for paraphrased queries.
+
+
+2️⃣ Real User Feedback Integration
+
+Users must provide feedback (👍/👎) before asking a new question.
+
+Feedback is logged for improving future responses.
+
+
+3️⃣ Optimized Performance
+
+Supports CPU execution with fast inference times.
+
+Uses efficient model loading to prevent redundant downloads.
+
+
+4️⃣ Robust Query Handling
+
+Graceful error handling for unsupported or irrelevant queries.
+
+Clear logging for debugging and improvement.
+
+
+
+---
+
+📁 Files & Structure
+
+
+---
+
+📌 Next Steps & Enhancements
+
+[ ] Improve UI with response highlighting for better readability.
+
+[ ] Enhance model fine-tuning based on collected user feedback.
+
+[ ] Support multiple document uploads for expanded knowledge retrieval.
+
+
+
+---
+
+💡 Conclusion
+
+The Support-Bot is a powerful AI-driven assistant designed for fast, accurate, and user-friendly document-based Q&A. 🚀
+
+🔗 GitHub Repository: Support-Bot
+
+
+---
+
