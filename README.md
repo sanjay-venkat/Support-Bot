@@ -1,5 +1,5 @@
 
-##Support-Bot
+**Support-Bot**
 
 This project implements a customer support bot that can answer questions based on the content of a given document.
 
