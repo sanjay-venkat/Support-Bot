@@ -78,3 +78,25 @@ The Support-Bot is designed to provide users with information extracted from a d
 ##   Example
 
 **Interactive Mode (Terminal):**
+
+Welcome to the Customer Support Bot! Type 'exit' to quit.
+
+You: What is the purpose of this document?
+Bot: This document provides information about information security risks.
+
+**Streamlit Interface:**
+
+*(A screenshot of the Streamlit interface would be very helpful here in your README!)*
+
+##   Files
+
+* `Support_Bot.py`: The main Python script containing the bot's logic for processing documents, handling queries, and generating responses in the terminal.
+* `app.py`: The Streamlit application script for creating the interactive chat interface in a web browser, allowing users to upload documents and interact with the bot.
+* `setup.bat`: A batch script for Windows to automate the download of necessary models.
+* `setup.sh`: A shell script for Linux/macOS to automate the download of necessary models.
+* `requirements.txt`: A list of Python dependencies required to run the project.
+* `sample.pdf`: A sample PDF document provided for testing the bot's functionality.
+* `support_bot_log.txt`: A log file that records the bot's activity, including document loading, query processing, and errors.
+* `Development Decision Document.md`: This document outlines the key design choices, challenges, and refinements made during the development of the Support-Bot.
+* `README.md`: The main file providing information and instructions about the Support-Bot project.
+* `Sample_Queries.txt`: A text file containing sample queries that can be used to test the bot.
