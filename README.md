@@ -138,11 +138,17 @@ Bot: This document provides guidelines on information security policies.
 
 support-bot/
 ├── Support_Bot.py  # Main Python script containing the bot's logic
+
 ├── setup.sh      # Bash script to download necessary models (Linux/macOS)
+
 ├── setup.bat     # Batch script to download necessary models (Windows)
+
 ├── requirements.txt # List of Python dependencies
+
 ├── sample.pdf    # Sample PDF document for testing the bot
+
 ├── support_bot_log.txt # Log file recording bot's activity 
+
 └── app.py        # Streamlit application script for the chat interface 
 
 ---
