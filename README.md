@@ -80,9 +80,10 @@ The Support-Bot is designed to provide users with information extracted from a d
 **Interactive Mode (Terminal):**
 
 Welcome to the Customer Support Bot! Type 'exit' to quit.
-
+```bash
 You: What is the purpose of this document?
 Bot: This document provides information about information security risks.
+```
 
 **Streamlit Interface:**
 
