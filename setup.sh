@@ -22,4 +22,12 @@ else
     echo "Sentence Transformer model already exists."
 fi
 
+if [ ! -d "tokenizers/punkt_tab" ]; then
+    echo "Downloading punkt..."
+    python3 -c "import nltk; nltk.download('punkt_tab')"
+    echo "Punkt downloaded successfully."
+else
+    echo "Punkt already exists."
+fi
+
 echo "Setup completed successfully."
