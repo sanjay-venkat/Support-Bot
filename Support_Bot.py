@@ -15,7 +15,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 torch.set_num_threads(4)  # Adjust as needed
 
 # Download necessary data for sentence tokenization
-nltk.download('punkt')
+if not nltk.data.find('tokenizers/punkt_tab'):
+    nltk.download('punkt_tab')
 
 # Set up logging
 logging.basicConfig(filename='support_bot_log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
