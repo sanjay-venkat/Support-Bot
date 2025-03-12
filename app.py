@@ -1,6 +1,7 @@
 import streamlit as st
 from Support_Bot import SupportBotAgent
 import logging
+import time
 
 st.title("Customer Support Bot")
 
@@ -43,6 +44,9 @@ with chat_container:
                         logging.info(f"User feedback: Negative (Message {idx})")
                         st.rerun()  # Refresh the app to update the UI
 
+# Placeholder for "Generating response..." message above input
+loading_placeholder = st.empty()
+
 # Input box at the bottom center
 with st.form(key='input_form', clear_on_submit=True):
     query = st.text_input("You:", key="input", value="", placeholder="Type your message here...")
@@ -50,10 +54,32 @@ with st.form(key='input_form', clear_on_submit=True):
 
 if submit_button and query:
     try:
-        response = st.session_state.bot.query_handler.answer_query(query)
         st.session_state.chat_history.append(("You", query))
+
+        # Show loading message above input
+        loading_text = loading_placeholder.markdown("🤖 **Generating response...** ⏳")
+
+        # Simulate a loading effect
+        for _ in range(300):  
+            loading_text.markdown("🤖 **Generating response...** ◐")  # Rotating effect
+            time.sleep(0.2)
+            loading_text.markdown("🤖 **Generating response...** ◓")  # Sand timer effect
+            time.sleep(0.2)
+            loading_text.markdown("🤖 **Generating response...** ◑")  # Rotating effect
+            time.sleep(0.2)
+            loading_text.markdown("🤖 **Generating response...** ◒")  # Rotating effect
+            time.sleep(0.2)
+
+        # Generate response
+        response = st.session_state.bot.query_handler.answer_query(query)
+
+        # Remove loading message
+        loading_placeholder.empty()
+
+        # Append bot response to chat history
         st.session_state.chat_history.append(("Bot", response))
         st.rerun()  # Refresh the app to update the chat history
+
     except Exception as e:
         st.error(f"Error processing query: {e}")
         logging.error(f"Error processing query: {e}")
