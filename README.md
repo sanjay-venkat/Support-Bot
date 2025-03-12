@@ -16,7 +16,7 @@ The bot can be run in:
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/sanjay-venkat/Support-Bot](https://github.com/sanjay-venkat/Support-Bot)
+    git clone https://github.com/sanjay-venkat/Support-Bot
     cd Support-Bot
     ```
 
