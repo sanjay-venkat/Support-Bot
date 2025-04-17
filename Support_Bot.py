@@ -137,9 +137,38 @@ class QueryHandler:
         tfidf_section = self.sections[tfidf_index]
 
         return faiss_section if cosine_similarities[tfidf_index] < 0.5 else tfidf_section
-
-    def answer_query(self, query):
-        """Generate a response using the T5 model."""
+    def answer_query(self, query, similarity_threshold=0.4):
+    
+        # Get query embedding
+        query_embedding = self.embedder.encode(query, convert_to_tensor=True, normalize_embeddings=True)
+        query_embedding_np = query_embedding.cpu().numpy().reshape(1, -1)
+    
+        # Search FAISS
+        distances, indices = self.index.search(query_embedding_np, k=1)
+        most_relevant_section = self.sections[indices[0][0]]
+        most_relevant_embedding = self.section_embeddings[indices[0][0]].cpu().numpy()
+        
+        # Calculate cosine similarity
+        similarity = cosine_similarity(query_embedding_np, most_relevant_embedding.reshape(1, -1))[0][0]
+        #print(f"Debug: Similarity = {similarity}")  # Log for calibration
+    
+        # Reject if similarity is too low
+        if similarity < similarity_threshold:
+            return "This question is outside the document's scope. I can only answer questions based on the provided material."
+    
+        # Generate answer
+        input_text = f"Answer strictly from this context: {most_relevant_section}\nQuestion: {query}\nAnswer:"
+        input_ids = self.qa_tokenizer(input_text, return_tensors="pt").input_ids[:, :512]
+        
+        outputs = self.qa_model.generate(input_ids, max_length=150)
+        answer = self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
+    
+       # Secondary check for hallucination
+        if "not in the context" in answer.lower() or "unknown" in answer.lower():
+            return "This information is not covered in the document."
+    
+        return answer
+    """def answer_query(self, query):
         context = self.find_relevant_section(query)
         if not context:
             return "I don’t have enough information to answer that."
@@ -148,7 +177,7 @@ class QueryHandler:
         input_ids = self.qa_tokenizer(input_text, return_tensors="pt").input_ids[:, :512]  # Limit token length
 
         outputs = self.qa_model.generate(input_ids, max_length=150)
-        return self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return self.qa_tokenizer.decode(outputs[0], skip_special_tokens=True)"""
 
 
 class SupportBotAgent:
